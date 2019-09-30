@@ -56,7 +56,7 @@ if (!(isset($_GET['action']) and $_GET['action'] === 'rp')) {
 
 	# Add our styles
 	add_action('login_enqueue_scripts', function () {
-		$cssFile = apply_filters('sleek_css_file', 'main.css');
+		$cssFile = apply_filters('sleek_css_file', 'app.css');
 
 		if (file_exists(get_stylesheet_directory() . '/dist/' . $cssFile)) {
 			wp_enqueue_style('sleek', get_stylesheet_directory_uri() . '/dist/' . $cssFile, [], filemtime(get_stylesheet_directory() . '/dist/' . $cssFile));
