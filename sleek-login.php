@@ -66,10 +66,12 @@ if (!(isset($_GET['action']) and $_GET['action'] === 'rp')) {
 
 ##################################
 # Require login on the entire site
-if (get_theme_support('sleek-require-login')) {
-	add_action('init', function () {
-		if (!defined('WP_CLI') and !is_admin() and !is_login_page() and !is_user_logged_in()) {
-			auth_redirect();
-		}
-	});
-}
+add_action('after_setup_theme', function () {
+	if (get_theme_support('sleek-require-login')) {
+		add_action('init', function () {
+			if (!defined('WP_CLI') and !is_admin() and !is_login_page() and !is_user_logged_in()) {
+				auth_redirect();
+			}
+		});
+	}
+});
