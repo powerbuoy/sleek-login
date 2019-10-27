@@ -37,7 +37,8 @@ add_filter('login_redirect', function ($to, $request, $user) {
 ####################################
 # Include theme CSS/JS on login page
 # NOTE: Don't do this on the recover password page because it has very special CSS/JS
-if (!(isset($_GET['action']) and $_GET['action'] === 'rp')) {
+# NOTE: Disabled
+if (false and !(isset($_GET['action']) and $_GET['action'] === 'rp')) {
 	# Link logo to home page
 	add_filter('login_headerurl', function () {
 		return home_url();
