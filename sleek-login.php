@@ -37,36 +37,37 @@ add_filter('login_redirect', function ($to, $request, $user) {
 ####################################
 # Include theme CSS/JS on login page
 # NOTE: Don't do this on the recover password page because it has very special CSS/JS
-# NOTE: Disabled
-if (false and !(isset($_GET['action']) and $_GET['action'] === 'rp')) {
-	# Link logo to home page
-	add_filter('login_headerurl', function () {
-		return home_url();
-	});
+add_action('after_setup_theme', function () {
+	if (get_theme_support('sleek/login/styling') and !(isset($_GET['action']) and $_GET['action'] === 'rp')) {
+		# Link logo to home page
+		add_filter('login_headerurl', function () {
+			return home_url();
+		});
 
-	# Change "Powered by WordPress" to site name
-	add_filter('login_headertext', function () {
-		return get_bloginfo('name');
-	});
+		# Change "Powered by WordPress" to site name
+		add_filter('login_headertext', function () {
+			return get_bloginfo('name');
+		});
 
-	# Remove default login style
-	# https://wordpress.stackexchange.com/questions/113501/avoid-to-load-default-wp-styles-in-login-screen
-	add_action('login_init', function() {
-		wp_deregister_style('login');
-	});
+		# Remove default login style
+		# https://wordpress.stackexchange.com/questions/113501/avoid-to-load-default-wp-styles-in-login-screen
+		add_action('login_init', function() {
+			wp_deregister_style('login');
+		});
 
-	# Add our styles
-	add_action('login_enqueue_scripts', function () {
-		if (file_exists(get_stylesheet_directory() . '/dist/app.css')) {
-			wp_enqueue_style('sleek', get_stylesheet_directory_uri() . '/dist/app.css', [], filemtime(get_stylesheet_directory() . '/dist/app.css'));
-		}
-	});
-}
+		# Add our styles
+		add_action('login_enqueue_scripts', function () {
+			if (file_exists(get_stylesheet_directory() . '/dist/app.css')) {
+				wp_enqueue_style('sleek', get_stylesheet_directory_uri() . '/dist/app.css', [], filemtime(get_stylesheet_directory() . '/dist/app.css'));
+			}
+		});
+	}
+});
 
 ##################################
 # Require login on the entire site
 add_action('after_setup_theme', function () {
-	if (get_theme_support('sleek-require-login')) {
+	if (get_theme_support('sleek/login/require_login')) {
 		add_action('init', function () {
 			if (!defined('WP_CLI') and !is_admin() and !is_login_page() and !is_user_logged_in()) {
 				auth_redirect();
