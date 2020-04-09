@@ -34,10 +34,22 @@ add_filter('login_redirect', function ($to, $request, $user) {
 	return $to;
 }, 10, 3);
 
+##################################
+# Require login on the entire site
+add_action('after_setup_theme', function () {
+	if (get_theme_support('sleek/login/require_login')) {
+		add_action('init', function () {
+			if (!defined('WP_CLI') and !is_admin() and !is_login_page() and !is_user_logged_in()) {
+				auth_redirect();
+			}
+		});
+	}
+});
+
 ####################################
 # Include theme CSS/JS on login page
-# NOTE: Don't do this on the recover password page because it has very special CSS/JS
 add_action('after_setup_theme', function () {
+	# NOTE: Don't do this on the recover password page because it has very special CSS/JS
 	if (get_theme_support('sleek/login/styling') and !(isset($_GET['action']) and $_GET['action'] === 'rp')) {
 		# Link logo to home page
 		add_filter('login_headerurl', function () {
@@ -61,17 +73,84 @@ add_action('after_setup_theme', function () {
 				wp_enqueue_style('sleek', get_stylesheet_directory_uri() . '/dist/app.css', [], filemtime(get_stylesheet_directory() . '/dist/app.css'));
 			}
 		});
-	}
-});
 
-##################################
-# Require login on the entire site
-add_action('after_setup_theme', function () {
-	if (get_theme_support('sleek/login/require_login')) {
-		add_action('init', function () {
-			if (!defined('WP_CLI') and !is_admin() and !is_login_page() and !is_user_logged_in()) {
-				auth_redirect();
-			}
+		# Style the login page
+		add_action('login_head', function () {
+			?>
+			<style>
+				body.login {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					min-height: 100vh;
+				}
+
+				body.login #login {
+					background: var(--login-bg, white);
+
+					width: 100%;
+					max-width: 100%;
+					min-height: 100vh;
+
+					margin: 0;
+					padding: var(--login-padding, var(--spacing-large));
+				}
+
+				@media (min-width: 44rem) {
+					body.login #login {
+						width: var(--login-width, 40rem);
+						min-height: 0;
+						margin: 2rem 0;
+					}
+				}
+
+				/* Give this div the same margin as other fields in the form (which are paragraphs) */
+				body.login #login #login_error,
+				body.login #login .user-pass-wrap {
+					margin-bottom: var(--paragraph-margin, var(--spacing-medium, 1rem));
+				}
+
+				body.login #login .wp-pwd {
+					position: relative;
+				}
+
+				/* Make room for icon */
+				body.login #login .wp-pwd input {
+					padding-right: calc(var(--form-field-padding-horizontal, 1.25rem) * 2 + var(--login-show-password-size, 1.5rem))
+				}
+
+				/* Show/hide password icon */
+				body.login #login .wp-pwd button.wp-hide-pw {
+					all: unset;
+
+					position: absolute;
+					right: var(--form-field-padding-horizontal, 1.25rem);
+					top: 50%;
+					transform: translateY(-50%);
+					cursor: pointer;
+				}
+
+				/* Remove potential before/after styling */
+				body.login #login .wp-pwd button.wp-hide-pw::before,
+				body.login #login .wp-pwd button.wp-hide-pw::after {
+					all: unset;
+				}
+
+				/* Icon */
+				body.login #login .wp-pwd button.wp-hide-pw > span {
+					color: var(--login-show-password-color, var(--link-color, blue));
+					font-size: var(--login-show-password-size, 1.5rem);
+				}
+
+				body.login #login .wp-pwd button.wp-hide-pw > span::before {
+					content: "👀";
+				}
+
+				body.login #login .wp-pwd button.wp-hide-pw > span.dashicons-hidden::before {
+					content: "🕶";
+				}
+			</style>
+			<?php
 		});
 	}
 });
