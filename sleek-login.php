@@ -86,19 +86,19 @@ add_action('after_setup_theme', function () {
 				}
 
 				body.login #login {
-					background: var(--login-bg, white);
+					background: var(--sleek-login-bg, white);
 
 					width: 100%;
 					max-width: 100%;
 					min-height: 100vh;
 
 					margin: 0;
-					padding: var(--login-padding, var(--spacing-large));
+					padding: var(--sleek-login-padding, var(--spacing-large));
 				}
 
 				@media (min-width: 44rem) {
 					body.login #login {
-						width: var(--login-width, 40rem);
+						width: var(--sleek-login-width, 40rem);
 						min-height: 0;
 						margin: 2rem 0;
 					}
@@ -116,7 +116,7 @@ add_action('after_setup_theme', function () {
 
 				/* Make room for icon */
 				body.login #login .wp-pwd input {
-					padding-right: calc(var(--form-field-padding-horizontal, 1.25rem) * 2 + var(--login-show-password-size, 1.5rem))
+					padding-right: calc(var(--form-field-padding-horizontal, 1.25rem) * 2 + var(--sleek-login-show-password-size, 1.5rem))
 				}
 
 				/* Show/hide password icon */
@@ -138,16 +138,16 @@ add_action('after_setup_theme', function () {
 
 				/* Icon */
 				body.login #login .wp-pwd button.wp-hide-pw > span {
-					color: var(--login-show-password-color, var(--link-color, blue));
-					font-size: var(--login-show-password-size, 1.5rem);
+					color: var(--sleek-login-show-password-color, var(--link-color, blue));
+					font-size: var(--sleek-login-show-password-size, 1.5rem);
 				}
 
 				body.login #login .wp-pwd button.wp-hide-pw > span::before {
-					content: "👀";
+					content: var(--sleek-login-show-password-icon, "👀");
 				}
 
 				body.login #login .wp-pwd button.wp-hide-pw > span.dashicons-hidden::before {
-					content: "🕶";
+					content: var(--sleek-login-hide-password-icon, "🕶");
 				}
 			</style>
 			<?php
